@@ -1,12 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour {
 
+	private List<MyColor> colorList = new List<MyColor>();
+	private int colorIndex = 0;
 
-	// Use this for initialization
-	void Start()
+
+    // Use this for initialization
+    void Start()
 	{
 
 	}
@@ -15,15 +19,53 @@ public class NewBehaviourScript : MonoBehaviour {
 	void Update()
 	{
 		GameObject obj = getClickObject();
-		if (obj != null)
+		if (obj == this.gameObject)
 		{
-			float changeRed = 0.0f;
-			float changeGreen = 0.0f;
-			float cahngeBlue = 1.0f;
-			float cahngeAlpha = 1.0f;
-			// 元の画像がそのまま表示される。
-			this.GetComponent<SpriteRenderer>().color = new Color(changeRed, changeGreen, cahngeBlue, cahngeAlpha);
+            this.addColorIndex(1);
+			this.updateColor();
 		}
+	}
+
+	public void updateColor()
+	{
+		this.GetComponent<SpriteRenderer>().color = createColor();
+	}
+
+	public void setColorList(List<MyColor> colorList)
+	{
+        this.colorList = new List<MyColor>();
+        this.colorList.Add(new MyColor(255, 0, 0));
+        this.colorList.Add(new MyColor(0, 255, 0));
+        this.colorList.Add(new MyColor(0, 0, 255));
+        //this.colorList = colorList;
+	}
+
+	public void addColorList(MyColor myColor)
+	{
+		this.colorList.Add(myColor);
+	}
+
+	public void setColorIndex(int index)
+	{
+		this.colorIndex = index;
+	}
+
+	protected void addColorIndex(int add = 1)
+	{
+		this.colorIndex+=1;
+		if(this.colorIndex >= this.colorList.Count)
+		{
+			this.colorIndex = 0;
+		}
+	}
+
+	protected Color createColor()
+	{
+		if (this.colorIndex >= this.colorList.Count)
+		{
+			return new Color(0.0f, 0.0f, 0.0f, 255.0f);
+		}
+		return this.colorList[this.colorIndex].createColor();
 	}
 
 	// 左クリックしたオブジェクトを取得する関数(2D)
